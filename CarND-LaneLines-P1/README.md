@@ -179,25 +179,29 @@ Stages of Pipeline| Plots of Slopes
 
 ### 4. Re Work on the pipeline
 
-- My last submission had issues with the `solidYellowLeft.mp4` file. 
-- The issue was identified in [Identify potential shortcomings with your current pipeline](####3) this README.
-- The primary issue was that both positive and negative slopes fall on same side of the lane.
-- Additionally, the left slope will cross over the right slope line and versa.
+My last submission mainly had issues with the `solidYellowLeft.mp4` file. In this section, I will talk about what i did to improve upon them.
+
+
+- The issue was identified earlier in [Identify potential shortcomings with your current pipeline](####3) section of this README.
+- The primary issue was that in some cases both the positive and negative slopes were falling on same side of the lane.
+- Additionally, the left slope were cross over the right slope line and vice versa.
+- Here are some samples from the v1 version of the video
 ![image100](./data/pics/white_yellow_bad.png)
 
 
-### Fix for the issue
-- In the re-work, I was focusing on solving the following issues.
+### Propsoed fix for the issue:
+- In the re-work, I was focusing on solving the the above mentioned issues. Here are some more sample images of the issue.
+
 
 Sample issue 1| Sample issue 2|Sample issue 3
 :-------------------------:|:-------------------------:|:-------------------------:
 ![](./data/v2/bad_yellow_v1.png)  | ![](./data/v2/bad_yellow_v2.png)| ![](./data/v2/bad_yellow_v3.png)
 
 #### Idea 
-- The idea was pretty simple. 
-- When generating the slopes, we have have two points `x1,y1` and `x2,y2`.
-- For +ive slopes, only add those points whose `x1` posiiton is greater than top right's x posiiton and `x2` coordinated is less than bottom right's position. 
-- Simiarly, for -ive slopes, add thos points whose x1 positon is less than teh top left position and it's x2 position is more than botton left position.
+- The idea is pretty simple. 
+- For each slope that is generated, we have have two set of points `x1,y1` and `x2,y2`.
+- For +ive slopes, only add those points in the list whose `x1` posiiton is greater than `top right x` posiiton of the cropped image and `x2` coordinate is less than bottom right x position of the cropped image. 
+- Simiarly, for -ive slopes, onkky add those points whose `x1` positon is less than the top left position and it's `x2` position is more than botton left `x` position.
 
 -  code looks like this
 
@@ -215,9 +219,37 @@ Sample issue 1| Sample issue 2|Sample issue 3
                     negative_slopes.append([slopes, point_s])
 ```
 
-- This result in great improvements. 
+- This resulted in great improvements. 
 
-- The best paramter for running the pipeline was chose using the earlier CV approach. 
+- The best paramter for running the pipeline was chosen using the earlier discussed CV approach. [Hyperparameters:](## Hyperparameters). More concretely, 
+- White 
+ 
+ ```
+     kernel_size = 3
+    low_threshold = 150
+    high_threshold = 300
+    rho = 2
+    theta = np.pi /180
+    thershold = 15
+    min_line_len = 15
+    max_line_gap = 10
+
+ ```
+- Yellow
+
+ ```
+  kernel_size = 3
+    low_threshold = 150
+    high_threshold = 200
+    rho = 2
+    theta = np.pi /180
+    thershold = 30
+    min_line_len = 25
+    max_line_gap = 7
+    mode = 3    
+  ```
+
+
 - Outputs of the images under all 3 modes. 
 
 Mode 1| 
@@ -241,7 +273,7 @@ Mode 3|
 
 Version 1 (Wrong) | Version 2(Correct)
 :-------------------------:|:-------------------------:|
-[![SolidWhiteRight](./data/pics/laneLines_thirdPass.jpg)](./data/white.mp4 "SolidWhiteRight") |[![SolidWhiteRight](./data/pics/laneLines_thirdPass.jpg)](./data/v2/white_v2.mp4 "SolidWhiteRight") |
+[![SolidWhiteRight](./data/v2/bad_white.png)](./data/white.mp4 "SolidWhiteRight") |[![SolidWhiteRight](./data/pics/laneLines_thirdPass.jpg)](./data/v2/white_v2.mp4 "SolidWhiteRight") |
 
 
 
@@ -250,4 +282,4 @@ Version 1 (Wrong) | Version 2(Correct)
 
 Version 1 (Wrong) | Version 2(Correct)
 :-------------------------:|:-------------------------:|
-[![SolidYellowLeft](./data/pics/laneLines_thirdPass.jpg)](./data/yellow.mp4 "SolidYellowLeft") |[![SolidYellowLeft](./data/pics/laneLines_thirdPass.jpg)](./data/v2/yellow_mode_3.mp4 "SolidYellowLeft") |
+[![SolidYellowLeft](./data/v2/bad_yellow_v3.png)](./data/yellow.mp4 "SolidYellowLeft") |[![SolidYellowLeft](./data/v2/yellow.png)](./data/v2/yellow_mode_3.mp4 "SolidYellowLeft") |
