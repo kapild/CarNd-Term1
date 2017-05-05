@@ -1,1 +1,0 @@
-# CardNd-Term1
